@@ -204,18 +204,19 @@ export function RbacTab() {
         <UserPermissionsInspector />
       </div>
 
-      {/* Role Form Modal */}
-      <RoleFormModal
-        isOpen={roleFormModal.isOpen}
-        onClose={closeRoleForm}
-        mode={roleFormModal.mode}
-        initialData={roleFormModal.data}
-        onSuccess={() => {
-          closeRoleForm()
-          loadRoles()
-          window.dispatchEvent(new Event('refresh-roles'))
-        }}
-      />
+      {/* Role Management Modal */}
+      {roleModal.isOpen && (
+        <UnifiedPermissionModal
+          mode={roleModal.mode}
+          targetId={roleModal.data?.id || 'new-role'}
+          onSave={handleRoleModalSave}
+          onClose={closeRoleModal}
+          roleData={roleModal.data as RoleFormData}
+          showTemplates={true}
+          showHistory={false}
+          allowCustomPermissions={true}
+        />
+      )}
     </div>
   )
 }
