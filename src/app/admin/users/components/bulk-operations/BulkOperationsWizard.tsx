@@ -304,10 +304,11 @@ export const BulkOperationsWizard: React.FC<BulkOperationsWizardProps> = ({
             variant="outline"
             onClick={onClose}
             disabled={loading}
+            className="px-6"
           >
-            Cancel
+            {state.step === maxStep ? 'Close' : 'Cancel'}
           </Button>
-          {state.step < 5 && (
+          {state.step < maxStep && (
             <Button
               onClick={nextStep}
               disabled={loading}
