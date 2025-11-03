@@ -68,12 +68,12 @@ export function ExecutiveDashboard({
   const criticalRecommendations = recommendations.filter(r => r.impact === 'critical')
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Executive Dashboard</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Executive Dashboard</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             Real-time system metrics and insights. Last updated: {lastUpdate.toLocaleTimeString()}
           </p>
         </div>
@@ -82,26 +82,26 @@ export function ExecutiveDashboard({
           size="sm"
           onClick={handleRefresh}
           disabled={isRefreshing}
-          className="gap-2"
+          className="gap-2 shrink-0"
         >
           <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          {isRefreshing ? 'Refreshing...' : 'Refresh'}
+          <span className="hidden sm:inline">{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
         </Button>
       </div>
 
       {/* Critical Alerts */}
       {criticalRecommendations.length > 0 && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="text-sm">
           <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Critical Issues Detected</AlertTitle>
+          <AlertTitle className="text-base">Critical Issues Detected</AlertTitle>
           <AlertDescription>
             {criticalRecommendations.length} critical issue{criticalRecommendations.length !== 1 ? 's' : ''} require immediate attention
           </AlertDescription>
         </Alert>
       )}
 
-      {/* Key Metrics Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      {/* Key Metrics Grid - Mobile: 1 col, Tablet: 2 col, Desktop: 3 col */}
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {Object.values(metrics).map((metric) => (
           <MetricCard key={metric.id} metric={metric} />
         ))}
