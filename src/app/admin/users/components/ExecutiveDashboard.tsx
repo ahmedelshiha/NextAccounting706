@@ -132,10 +132,10 @@ export function ExecutiveDashboard({
       {/* System Health Details */}
       <Card>
         <CardHeader>
-          <CardTitle>System Health Overview</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">System Health Overview</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
             <HealthIndicator label="API Response Time" value="45ms" target="<100ms" status="good" />
             <HealthIndicator label="Database Health" value="99.2%" target="99.9%" status="good" />
             <HealthIndicator label="Error Rate" value="0.02%" target="<0.1%" status="good" />
