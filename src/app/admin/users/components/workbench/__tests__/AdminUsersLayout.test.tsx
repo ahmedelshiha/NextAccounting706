@@ -28,9 +28,17 @@ describe('AdminUsersLayout', () => {
     vi.clearAllMocks()
   })
 
+  const renderWithContext = (component: React.ReactNode) => {
+    return render(
+      <UsersContextProvider>
+        {component}
+      </UsersContextProvider>
+    )
+  }
+
   describe('Rendering', () => {
     it('should render header with quick actions', () => {
-      render(<AdminUsersLayout />)
+      renderWithContext(<AdminUsersLayout />)
 
       // Check for header element
       const header = screen.getByRole('banner') || screen.getByText(/Add User|Import|Bulk|Export/)
