@@ -1,36 +1,29 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
-import { vi, describe, it, beforeEach, expect } from 'vitest'
+import { vi, describe, it, beforeEach, expect, afterEach } from 'vitest'
 import OverviewCards from '../OverviewCards'
 
-// Setup mocks with hoisted context
-const { mockUseUsersContext } = vi.hoisted(() => {
-  return {
-    mockUseUsersContext: vi.fn()
-  }
-})
-
-vi.mock('../../../contexts/UsersContextProvider', () => ({
-  useUsersContext: mockUseUsersContext
-}))
-
-// Mock the OperationsOverviewCards component
+// Setup mocks
+vi.mock('../../../contexts/UsersContextProvider')
 vi.mock('../OperationsOverviewCards', () => ({
-  OperationsOverviewCards: (props: any) => (
+  OperationsOverviewCards: ({ metrics, isLoading }: any) => (
     <div data-testid="operations-overview-cards">
-      <div>Total Users: {props.metrics?.totalUsers}</div>
-      <div>Pending Approvals: {props.metrics?.pendingApprovals}</div>
-      <div>In Progress: {props.metrics?.inProgressWorkflows}</div>
-      <div>Due This Week: {props.metrics?.dueThisWeek}</div>
-      <div>Loading: {props.isLoading ? 'true' : 'false'}</div>
+      <div>Total Users: {metrics?.totalUsers ?? 0}</div>
+      <div>Pending Approvals: {metrics?.pendingApprovals ?? 0}</div>
+      <div>In Progress: {metrics?.inProgressWorkflows ?? 0}</div>
+      <div>Due This Week: {metrics?.dueThisWeek ?? 0}</div>
+      <div>Loading: {String(isLoading)}</div>
     </div>
   )
 }))
 
-// Mock the Skeleton component
 vi.mock('@/components/ui/skeleton', () => ({
-  Skeleton: () => <div data-testid="skeleton">Skeleton</div>
+  Skeleton: ({ className }: any) => <div data-testid="skeleton" className={className}>Skeleton</div>
 }))
+
+import { useUsersContext } from '../../../contexts/UsersContextProvider'
+
+const mockUseUsersContext = useUsersContext as any
 
 describe('OverviewCards', () => {
   beforeEach(() => {
