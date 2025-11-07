@@ -98,7 +98,7 @@ const UserRow = memo(function UserRow({
       <div className="flex items-center gap-3">
         <img
           src={user.avatar || 'https://via.placeholder.com/32'}
-          alt={user.name}
+          alt={user.name || 'User avatar'}
           className="w-8 h-8 rounded-full bg-gray-200 object-cover"
           loading="lazy"
         />
@@ -137,10 +137,10 @@ const UserRow = memo(function UserRow({
       <div>
         <span
           className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded ${getRoleColor(
-            user.role
+            user.role || 'VIEWER'
           )}`}
         >
-          {user.role}
+          {user.role || 'VIEWER'}
         </span>
       </div>
 
@@ -148,10 +148,10 @@ const UserRow = memo(function UserRow({
       <div>
         <span
           className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded ${getStatusColor(
-            user.status
+            user.status || 'ACTIVE'
           )}`}
         >
-          {user.status}
+          {user.status || 'ACTIVE'}
         </span>
       </div>
 
