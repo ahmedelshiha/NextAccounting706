@@ -222,9 +222,9 @@ export default function AdminSidebar({
           </CollapsibleTrigger>
 
           <CollapsibleContent className="admin-sidebar-content-inner">
-            <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded">
-              <p className="font-medium mb-2">📊 Charts coming soon</p>
-              <p className="text-xs">Role distribution, user growth, and activity insights will appear here.</p>
+            <div className="text-sm text-gray-600 p-3 bg-gray-100 rounded border border-gray-200">
+              <p className="font-medium mb-2">📊 Role Distribution & User Growth</p>
+              <p className="text-xs text-gray-500">Charts coming soon - role distribution, user growth, and activity insights will appear here.</p>
             </div>
           </CollapsibleContent>
         </Collapsible>
