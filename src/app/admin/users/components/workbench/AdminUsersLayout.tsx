@@ -98,7 +98,7 @@ export default function AdminUsersLayout() {
 
       {/* Sticky Footer - Bulk Operations (only visible when users selected) - Builder.io slot with fallback */}
       {selectedCount > 0 && (
-        <footer className="admin-workbench-footer">
+        <footer className="admin-workbench-footer" data-testid="bulk-actions-panel">
           {isBuilderEnabled ? (
             <BuilderFooterSlot
               selectedCount={selectedCount}
