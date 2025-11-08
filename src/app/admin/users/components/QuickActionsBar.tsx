@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { Plus, Upload, Download, RefreshCw, Settings, Loader2 } from 'lucide-react'
+import { Plus, Upload, Download, RefreshCw, Loader2 } from 'lucide-react'
 
 interface QuickActionsBarProps {
   onAddUser?: () => void
