@@ -45,6 +45,10 @@ const UserRow = memo(function UserRow({
 }: UserRowProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editValue, setEditValue] = useState(user.name || '')
+  const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedRole, setSelectedRole] = useState<UserItem['role']>(user.role || 'VIEWER')
+  const roles = ['ADMIN','EDITOR','VIEWER','TEAM_LEAD','TEAM_MEMBER','STAFF','CLIENT'] as const
 
   const handleSave = useCallback(async () => {
     if (editValue.trim() && editValue !== user.name) {
