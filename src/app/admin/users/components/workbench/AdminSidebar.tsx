@@ -263,14 +263,14 @@ export default function AdminSidebar({
           </CollapsibleTrigger>
 
           <CollapsibleContent className="admin-sidebar-content-inner">
-            <div className="space-y-6">
-              <div>
+            <div className="space-y-4">
+              <div className="bg-white rounded border border-gray-100 p-3">
                 <RoleDistributionChart
                   data={roleDistributionData}
                   loading={context.isLoading}
                 />
               </div>
-              <div>
+              <div className="bg-white rounded border border-gray-100 p-3">
                 <UserGrowthChart
                   data={userGrowthData}
                   loading={context.isLoading}
