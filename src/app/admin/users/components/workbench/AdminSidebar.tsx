@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/collapsible'
 import RoleDistributionChart from '../RoleDistributionChart'
 import UserGrowthChart from '../UserGrowthChart'
+import RecentActivityFeed from '../RecentActivityFeed'
 import { useUsersContext } from '../../contexts/UsersContextProvider'
 
 interface AdminSidebarProps {
