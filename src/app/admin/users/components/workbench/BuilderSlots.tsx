@@ -3,7 +3,7 @@
 import React from 'react'
 import { useBuilderContent } from '@/hooks/useBuilderContent'
 import { BUILDER_MODELS } from '@/lib/builder-io/config'
-import { QuickActionsBar } from '../QuickActionsBar'
+import { QuickActionsBar, QuickActionsBarProps } from '../QuickActionsBar'
 import OverviewCards from './OverviewCards'
 import AdminSidebar from './AdminSidebar'
 import BulkActionsPanel from './BulkActionsPanel'
@@ -37,31 +37,31 @@ function renderBuilderBlocks(blocks: any[]): React.ReactNode {
  *
  * Renders Builder.io content if available, otherwise renders default QuickActionsBar
  */
-export function BuilderHeaderSlot() {
+export function BuilderHeaderSlot(props: Partial<QuickActionsBarProps>) {
   const { content, isLoading, error, isEnabled } = useBuilderContent(
     BUILDER_MODELS.ADMIN_WORKBENCH_HEADER
   )
 
   if (!isEnabled) {
-    return <QuickActionsBar />
+    return <QuickActionsBar {...props} />
   }
 
   if (isLoading) {
-    return <QuickActionsBar />
+    return <QuickActionsBar {...props} />
   }
 
   if (error) {
     console.warn(`Failed to load Builder.io header content: ${error}`)
-    return <QuickActionsBar />
+    return <QuickActionsBar {...props} />
   }
 
   if (!content) {
-    return <QuickActionsBar />
+    return <QuickActionsBar {...props} />
   }
 
   return (
     <div data-builder-model={BUILDER_MODELS.ADMIN_WORKBENCH_HEADER} data-testid="builder-header-slot">
-      {content.blocks ? renderBuilderBlocks(content.blocks) : <QuickActionsBar />}
+      {content.blocks ? renderBuilderBlocks(content.blocks) : <QuickActionsBar {...props} />}
     </div>
   )
 }
