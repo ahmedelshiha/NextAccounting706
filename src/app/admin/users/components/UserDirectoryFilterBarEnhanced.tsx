@@ -101,6 +101,7 @@ export function UserDirectoryFilterBarEnhanced({
     getAllPresets
   } = useFilterPresets()
 
+  const queryBuilder = useQueryBuilder()
   const quickFilters = useMemo(() => createDefaultQuickFilters(), [])
 
   const hasActiveFilters = !!(
