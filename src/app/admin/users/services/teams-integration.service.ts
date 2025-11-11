@@ -8,8 +8,7 @@ export interface TeamsIntegrationConfig {
 }
 
 export interface TeamsMessage {
-  @type?: string
-  @context?: string
+  [key: string]: any
   summary?: string
   themeColor?: string
   sections?: TeamsSection[]
@@ -26,7 +25,7 @@ export interface TeamsSection {
 }
 
 export interface TeamsAction {
-  @type: string
+  [key: string]: any
   name: string
   targets?: {os: string; uri: string}[]
   inputs?: {
