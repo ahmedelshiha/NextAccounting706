@@ -141,6 +141,32 @@ Each phase includes objectives, key tasks, acceptance criteria, and dependencies
 - Testing
   - Unit tests for validators; contract tests for adapters; E2E flows: existing vs new entity, duplicate, offline registry, manual review route.
 
+### Phase 1.1A — Business Account Setup Wizard (Mobile screens)
+- Observed UI (from images)
+  - Header with Back button, title “Business Setup”, profile/avatar.
+  - Global search bar (placeholder: “Search Services”).
+  - Segmented tabs: Existing Business | New Startup | Individual.
+  - Form fields: License Number, Business (name), Department (select with dropdown: e.g., Abu Dhabi Airports Free Zone, Abu Dhabi Department of Economic Development, Abu Dhabi Global Market).
+  - Consent: “I agree to … License agreement” with hyperlink.
+  - Primary CTA: Swipe to Setup — rightward swipeable pill/gradient button with arrow.
+- UX/Behavior
+  - Form validation: required Business and Department; Existing Business requires License Number. License supports alphanumeric (e.g., CR124686P). Inline errors below inputs.
+  - Department dropdown searchable, virtualized list; options sourced from economic_zones table filtered by country/emirate.
+  - “Existing Business” → attempt license lookup; prefill Business/Department; allow manual override with change log entry.
+  - “New Startup” → hide License Number; show Proposed Name, Emirate/Zone; optional name reservation step; create entity in Draft state.
+  - “Individual” → Emirates ID/TIN input, DOB; create individual taxpayer entity with minimal fields.
+  - Swipe-to-setup: track drag width; enable only when form valid and consent checked; haptic on threshold; cancel if released before threshold; loading state after trigger; prevent double submit via idempotency key.
+- Accessibility & i18n
+  - 44px+ touch targets; semantic labels; focus order aligns top-to-bottom; talkback announcements for tab changes and validation; supports RTL Arabic with mirrored swipe (right-to-left → swipe left to confirm) based on locale.
+- Telemetry
+  - Events: setup.view, tab.change, license.lookup.start/success/fail, dept.search, consent.toggle, swipe.start/complete/cancel, setup.submit/success/error; durations and error codes.
+- Error states
+  - License not found, registry rate-limited, name mismatch >20% distance, duplicate entity; provide “Continue with manual review” CTA.
+- API usage
+  - Reuse POST /api/entities/setup, GET /api/registries/:country/license/:number, POST /api/consents. Attach user locale and device to payload.
+- Testing
+  - Unit: validators (CR/ID formats), swipe reducer; Integration: tab flows; E2E: happy path and offline registry; RTL snapshots.
+
 ### Phase 2 — Dashboard & Actionables (right panel)
 - Tasks
   - Action center with upcoming/overdue filings, renewals, and required evidence.
@@ -310,7 +336,7 @@ Each phase includes objectives, key tasks, acceptance criteria, and dependencies
 Use the platform’s MCP connectors to accelerate setup. You can connect integrations from the MCP popover.
 
 - Supabase — authentication and database primitives; real-time subscriptions.
-- Neon �� serverless Postgres for data storage.
+- Neon — serverless Postgres for data storage.
 - Netlify — hosting/CDN for static assets or marketing site.
 - Zapier — automate reminders, move docs across apps.
 - Figma — design-to-code; accelerate RTL/Arabic UI work.
