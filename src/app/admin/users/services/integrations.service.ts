@@ -24,8 +24,8 @@ import {
 
 export interface IntegrationConfig {
   slack?: SlackIntegrationConfig
-  zapier?: ZapierIntegrationConfig
-  webhook?: WebhookIntegrationConfig
+  zapier?: ZapierConfig
+  webhook?: WebhookConfig
   teams?: TeamsIntegrationConfig
 }
 
