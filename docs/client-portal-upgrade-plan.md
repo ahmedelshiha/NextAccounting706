@@ -137,7 +137,7 @@ Each phase includes objectives, key tasks, acceptance criteria, and dependencies
   - End-to-end setup succeeds for happy-path in UAE/KSA/EGY; duplicate protection; consent captured with timestamp/IP/UA; audit events present.
   - Accessibility verified (tab order, labels, contrast); localized AR/EN content; RTL layout correct.
 - Telemetry
-  - Funnel metrics: view → submit → verified → completed; reason codes for drop-offs; time-to-completion; registry latency.
+  - Funnel metrics: view → submit ��� verified → completed; reason codes for drop-offs; time-to-completion; registry latency.
 - Testing
   - Unit tests for validators; contract tests for adapters; E2E flows: existing vs new entity, duplicate, offline registry, manual review route.
 
@@ -188,6 +188,35 @@ Each phase includes objectives, key tasks, acceptance criteria, and dependencies
   - Success screen appears only after persisted entity + audit log; deep-link works; reconnection resumes last state; RTL layout validated.
 
 ### Phase 2 — Dashboard & Actionables (right panel)
+
+Mobile and Desktop dashboards deliver identical functions with layout-specific adaptations.
+
+- Mobile main dashboard (from screenshot)
+  - Header: country flag + time-based greeting, entity name, hamburger menu, overflow menu, notifications.
+  - Global search: "Search Services" across tasks, filings, invoices, docs, help.
+  - Verification banner: status card with icon, copy about ~12h verification, entity name, pill “Pending Verification”. Tap → setup status details.
+  - Upcoming Compliance: next deadline card (e.g., VAT Return & Payment – Monthly – date) with deep-link to period checklist.
+  - Features grid: KYC, Documents, Invoicing, Upload Bill, Attendance, Approvals. Each opens its module with badges for pending items.
+  - Bottom nav: Home, Updates, Services, My Team. Persistent; shows unread indicators.
+  - Interactions: pull-to-refresh; offline banner; skeleton loaders; swipe back; Arabic RTL support.
+
+- Desktop main dashboard (same functions)
+  - Layout: top header + left sidebar (replaces bottom nav) with the same tabs: Home, Updates, Services, My Team; quick entity switcher and country flag in header.
+  - Content grid: 12-column responsive grid. Left: Verification banner and Upcoming Compliance; Right: Actionables (overdue/soon), Recent Messages, and Quick Upload.
+  - Features grid appears as cards with descriptions and counts; keyboard shortcuts (e.g., “U” for Upload Bill).
+  - Search bar in header with command palette (Cmd/Ctrl+K) and scoped search by entity.
+  - Widgets parity: same URLs/permissions as mobile; no feature divergence.
+
+- Data & states
+  - Verification status from entity_setup job; Upcoming Compliance from obligations and FilingPeriods; feature tiles show counts (pending KYC steps, documents to review, invoices due, approvals pending).
+  - Empty states with clear CTAs; error toasts mapped to retries; background sync updates badges.
+
+- Telemetry
+  - dashboard.view, widget.click, search.open/submit, compliance.card.open, feature.tile.open, bottom_nav.click/side_nav.click; device_type dimension.
+
+- Accessibility & performance
+  - ARIA landmarks/labels; focus-visible outlines; 60fps scroll; image/icon lazy loading; localization AR/EN;
+  - Breakpoints: mobile <640px, tablet 641–1024px, desktop ≥1024px with 3-column layout.
 - Tasks
   - Action center with upcoming/overdue filings, renewals, and required evidence.
   - Calendar view per entity/country; ICS export and WhatsApp/SMS/email reminders (opt-in).
@@ -339,7 +368,7 @@ Each phase includes objectives, key tasks, acceptance criteria, and dependencies
 - Q1: Phases 0–2
 - Q2: Phases 3–6
 - Q3: Phases 7–9
-- Q4: Phases 10–15 and global hardening
+- Q4: Phases 10��15 and global hardening
 
 ---
 
