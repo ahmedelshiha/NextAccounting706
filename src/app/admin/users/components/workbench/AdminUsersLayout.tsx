@@ -22,7 +22,7 @@ import '../styles/admin-users-layout.css'
  * Layout structure:
  * ┌─────────────────────────────────────────────┐
  * │        Sticky Header: QuickActionsBar        │
- * ├──────────────┬─────────────────���───────������─┤
+ * ├──────────────┬─────────────────���───────���������┤
  * │              │                            │
  * │   Sidebar    │     Main Content Area      │
  * ���  (Analytics  │   ┌──────────────────��    │
@@ -209,7 +209,6 @@ export default function AdminUsersLayout() {
                   onViewProfileInline={(user) => {
                     context.setSelectedUser(user)
                     setInlineProfileUser(user)
-                    setSidebarOpen(false)
                   }}
                 />
               </div>
