@@ -293,34 +293,8 @@ export default function DashboardPage() {
             </Card>
           </div>
 
-          {/* Right Column: Quick Access & Features (visible on desktop) */}
+          {/* Right Column: Quick Stats (visible on desktop) */}
           <div className="space-y-6">
-            {/* Features Quick Access */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Features</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
-                  {[
-                    { icon: FileText, label: "Documents", href: "/portal/documents" },
-                    { icon: Users, label: "Team", href: "/portal/team" },
-                    { icon: DollarSign, label: "Invoicing", href: "/portal/invoicing" },
-                    { icon: Settings, label: "Settings", href: "/portal/settings" },
-                  ].map((feature) => (
-                    <Link key={feature.label} href={feature.href}>
-                      <button className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition flex flex-col items-center justify-center gap-2">
-                        <feature.icon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                        <span className="text-xs font-medium text-gray-900 dark:text-white text-center">
-                          {feature.label}
-                        </span>
-                      </button>
-                    </Link>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Quick Stats */}
             <Card>
               <CardHeader>
