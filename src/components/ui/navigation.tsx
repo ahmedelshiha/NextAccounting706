@@ -237,8 +237,9 @@ export function Navigation({
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Mobile language toggle and menu button */}
+          <div className="md:hidden flex items-center space-x-2">
+            <LanguageToggle currentLocale={currentLocale} size="icon" />
             <Button
               variant="ghost"
               size="sm"
