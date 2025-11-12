@@ -14,8 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SwipeToConfirm } from "@/components/ui/SwipeToConfirm";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 interface IndividualTabProps {
   onError: (message: string) => void;
