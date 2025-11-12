@@ -300,17 +300,17 @@ export async function processNextImportJob(): Promise<boolean> {
     });
 
     // Log import completion
-    await logger.audit({
+    await logAuditSafe({
       action: "entities.csv_import_completed",
-      actorId: job.userId,
-      targetId: job.tenantId,
       details: {
+        actorId: job.userId,
+        targetId: job.tenantId,
         jobId: job.jobId,
         totalRows: job.data.length,
         successCount,
         failureCount: errors.length,
       },
-    });
+    }).catch(() => {});
 
     logger.info("CSV import job completed", {
       jobId: job.jobId,
