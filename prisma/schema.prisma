@@ -344,6 +344,7 @@ model Tenant {
   supportTickets        SupportTicket[]           @relation("SupportTickets")
   knowledgeBaseCategories KnowledgeBaseCategory[]   @relation("KnowledgeBaseCategories")
   knowledgeBaseArticles KnowledgeBaseArticle[]      @relation("KnowledgeBaseArticles")
+  userPaymentMethods    UserPaymentMethod[]        @relation("UserPaymentMethods")
 
   @@index([status])
 }
