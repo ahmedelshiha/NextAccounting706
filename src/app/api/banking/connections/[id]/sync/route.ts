@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma'
 import { logAuditSafe } from '@/lib/observability-helpers'
 import { withTenantContext } from '@/lib/api-wrapper'
 import { requireTenantContext } from '@/lib/tenant-utils'
-import { createBankingProvider } from '@/lib/banking/adapters'
+import { createBankingProvider, BankTransaction } from '@/lib/banking/adapters'
 
 export const POST = withTenantContext(async (
   request: NextRequest,
@@ -42,7 +42,7 @@ export const POST = withTenantContext(async (
     // Get provider and sync transactions
     const provider = createBankingProvider(connection.provider)
 
-    let transactionsFromBank = []
+    let transactionsFromBank: BankTransaction[] = []
     let syncError: string | null = null
 
     try {

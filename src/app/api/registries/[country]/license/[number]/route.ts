@@ -97,7 +97,7 @@ async function lookupEGYPTLicense(licenseNumber: string): Promise<LicenseData | 
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Record<string, string | string[]> }
+  { params }: { params: any }
 ) {
   try {
     const { country, number } = params;

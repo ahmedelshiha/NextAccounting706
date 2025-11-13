@@ -20,8 +20,7 @@ const CreateSpaceSchema = z.object({
   }).optional(),
 })
 
-export async function POST(request: NextRequest) {
-  return withTenantContext(async () => {
+export const POST = withTenantContext(async (request: NextRequest) => {
     const { userId, tenantId } = requireTenantContext()
 
     if (!userId || !tenantId) {
@@ -71,14 +70,12 @@ export async function POST(request: NextRequest) {
       )
     }
   })
-}
 
 /**
  * GET /api/team-spaces
  * List team spaces for user
  */
-export async function GET(request: NextRequest) {
-  return withTenantContext(async () => {
+export const GET = withTenantContext(async (request: NextRequest) => {
     const { userId, tenantId } = requireTenantContext()
 
     if (!userId || !tenantId) {
@@ -132,4 +129,3 @@ export async function GET(request: NextRequest) {
       )
     }
   })
-}

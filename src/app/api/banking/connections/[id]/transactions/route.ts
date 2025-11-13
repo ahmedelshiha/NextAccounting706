@@ -137,7 +137,7 @@ export const GET = withTenantContext(async (
           total,
           limit: filters.limit,
           offset: filters.offset,
-          hasMore: filters.offset + filters.limit < total,
+          hasMore: (filters.offset! + filters.limit!) < total,
         },
       },
       { status: 200 }

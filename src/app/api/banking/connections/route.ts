@@ -13,7 +13,7 @@ const CreateConnectionSchema = z.object({
   accountType: z.enum(['checking', 'savings', 'business']).optional(),
   entityId: z.string().optional(),
   syncFrequency: z.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'MANUAL']).default('DAILY'),
-  credentials: z.record(z.any()).optional(),
+  credentials: z.record(z.string(), z.any()).optional(),
 })
 
 const FilterSchema = z.object({
