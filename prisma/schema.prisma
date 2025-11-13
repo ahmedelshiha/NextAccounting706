@@ -348,6 +348,11 @@ model Tenant {
   bankingConnections    BankingConnection[]        @relation("BankingConnections")
   bankingTransactions   BankingTransaction[]       @relation("BankingTransactions")
   taxFilings            TaxFiling[]                @relation("TaxFilings")
+  parties               Party[]                    @relation("PartyMasterData")
+  products              Product[]                  @relation("ProductMasterData")
+  taxCodes              TaxCode[]                  @relation("TaxCodeMasterData")
+  mergeLogs             MergeLog[]                 @relation("MergeLogs")
+  survivorshipRules     SurvivorshipRule[]         @relation("SurvivorshipRules")
 
   @@index([status])
 }
@@ -2621,4 +2626,300 @@ model TaxFiling {
   @@index([periodStartDate, periodEndDate])
   @@index([submittedAt])
   @@map("tax_filings")
+}
+
+// ============================================================================
+// Master Data Management (MDM) Models
+// ============================================================================
+
+/// Party Master Data - Represents vendors, customers, employees, etc.
+model Party {
+  id                    String                    @id @default(cuid())
+  tenantId              String
+  partyType             PartyType                 // VENDOR, CUSTOMER, EMPLOYEE, PARTNER
+  name                  String                    @db.VarChar(255)
+  legalName             String?                   @db.VarChar(255)
+  registrationNumber    String?                   @db.VarChar(100)
+  taxId                 String?                   @db.VarChar(100)
+  email                 String?                   @db.VarChar(255)
+  phone                 String?                   @db.VarChar(20)
+  address               String?                   @db.Text
+  city                  String?                   @db.VarChar(100)
+  country               String?                   @db.VarChar(2)
+  status                PartyStatus               @default(ACTIVE) // ACTIVE, INACTIVE, MERGED, DELETED
+  
+  // Master record tracking
+  isMasterRecord        Boolean                   @default(false)
+  masterRecordId        String?                   // Points to the master if this is a duplicate
+  
+  // Data quality metrics
+  dataQualityScore      Decimal                   @default(0) @db.Decimal(5, 2) // 0-100
+  lastValidatedAt       DateTime?
+  validationErrors      String[]                  @default([])
+  
+  // Metadata
+  metadata              Json?
+  externalId            String?                   @db.VarChar(255)
+  source                String?                   @db.VarChar(100) // DATA_SOURCE, MANUAL, IMPORT, API
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  createdBy             String?
+  updatedBy             String?
+  
+  // Relations
+  tenant                Tenant                    @relation("PartyMasterData", fields: [tenantId], references: [id], onDelete: Cascade)
+  masterRecord          Party?                    @relation("PartyDuplicates", fields: [masterRecordId], references: [id])
+  duplicates            Party[]                   @relation("PartyDuplicates")
+  products              Product[]                 @relation("PartyProducts")
+  
+  @@unique([tenantId, registrationNumber])
+  @@unique([tenantId, taxId])
+  @@index([tenantId, partyType])
+  @@index([tenantId, status])
+  @@index([tenantId, isMasterRecord])
+  @@index([masterRecordId])
+  @@index([dataQualityScore])
+  @@map("parties")
+}
+
+/// Product Master Data - Represents products/services offered
+model Product {
+  id                    String                    @id @default(cuid())
+  tenantId              String
+  productCode           String                    @db.VarChar(100)
+  productName           String                    @db.VarChar(255)
+  description           String?                   @db.Text
+  productType           ProductType               // GOOD, SERVICE, BUNDLE
+  category              String?                   @db.VarChar(100)
+  unitOfMeasure         String?                   @db.VarChar(50)
+  
+  // Pricing
+  standardPrice         Decimal?                  @db.Decimal(19, 4)
+  currency              String?                   @db.VarChar(3) // ISO 4217
+  
+  // Tax & Compliance
+  taxCodeId             String?
+  taxRate               Decimal?                  @db.Decimal(5, 2)
+  
+  // Master record tracking
+  isMasterRecord        Boolean                   @default(false)
+  masterRecordId        String?
+  
+  // Status & Lifecycle
+  status                ProductStatus             @default(ACTIVE) // ACTIVE, INACTIVE, DISCONTINUED, MERGED
+  effectiveFrom         DateTime?
+  effectiveTo           DateTime?
+  
+  // Data quality
+  dataQualityScore      Decimal                   @default(0) @db.Decimal(5, 2)
+  lastValidatedAt       DateTime?
+  
+  // Metadata
+  metadata              Json?
+  externalId            String?                   @db.VarChar(255)
+  source                String?                   @db.VarChar(100)
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  createdBy             String?
+  updatedBy             String?
+  
+  // Relations
+  tenant                Tenant                    @relation("ProductMasterData", fields: [tenantId], references: [id], onDelete: Cascade)
+  taxCode               TaxCode?                  @relation(fields: [taxCodeId], references: [id])
+  masterRecord          Product?                  @relation("ProductDuplicates", fields: [masterRecordId], references: [id])
+  duplicates            Product[]                 @relation("ProductDuplicates")
+  party                 Party?                    @relation("PartyProducts", fields: [id], references: [id])
+  
+  @@unique([tenantId, productCode])
+  @@index([tenantId, productType])
+  @@index([tenantId, status])
+  @@index([tenantId, isMasterRecord])
+  @@index([masterRecordId])
+  @@index([taxCodeId])
+  @@map("products")
+}
+
+/// Tax Code Master Data - Tax classification codes
+model TaxCode {
+  id                    String                    @id @default(cuid())
+  tenantId              String
+  taxCodeValue          String                    @db.VarChar(50)
+  description           String?                   @db.VarChar(255)
+  taxType               TaxType                   // VAT, INCOME_TAX, WITHHOLDING, ZAKAT, etc.
+  country               String                    @db.VarChar(2) // ISO 3166-1 alpha-2
+  taxRate               Decimal                   @db.Decimal(5, 2)
+  
+  // Master record tracking
+  isMasterRecord        Boolean                   @default(false)
+  masterRecordId        String?
+  
+  // Status & Lifecycle
+  status                TaxCodeStatus             @default(ACTIVE) // ACTIVE, INACTIVE, SUPERSEDED, MERGED
+  effectiveFrom         DateTime
+  effectiveTo           DateTime?
+  
+  // Metadata
+  metadata              Json?
+  externalId            String?                   @db.VarChar(255)
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  createdBy             String?
+  updatedBy             String?
+  
+  // Relations
+  tenant                Tenant                    @relation("TaxCodeMasterData", fields: [tenantId], references: [id], onDelete: Cascade)
+  masterRecord          TaxCode?                  @relation("TaxCodeDuplicates", fields: [masterRecordId], references: [id])
+  duplicates            TaxCode[]                 @relation("TaxCodeDuplicates")
+  products              Product[]
+  
+  @@unique([tenantId, taxCodeValue, country])
+  @@index([tenantId, taxType])
+  @@index([tenantId, country])
+  @@index([tenantId, status])
+  @@index([tenantId, isMasterRecord])
+  @@index([masterRecordId])
+  @@map("tax_codes")
+}
+
+/// Merge Log - Tracks party/product/taxcode merges and unmerges
+model MergeLog {
+  id                    String                    @id @default(cuid())
+  tenantId              String
+  recordType            MergeRecordType           // PARTY, PRODUCT, TAX_CODE
+  
+  // Master and duplicate records
+  masterRecordId        String
+  masterRecordName      String                    @db.VarChar(255)
+  duplicateRecordId     String
+  duplicateRecordName   String                    @db.VarChar(255)
+  
+  // Merge details
+  mergeReason           String?                   @db.Text
+  survivorshipRuleId    String?
+  survivorshipStrategy  SurvivorshipStrategy      @default(MANUAL) // MANUAL, AUTOMATIC, RULE_BASED
+  
+  // Merge result
+  mergeStatus           MergeStatus               @default(PENDING) // PENDING, COMPLETED, FAILED, ROLLED_BACK
+  mergeErrors           String[]                  @default([])
+  
+  // Unmerge capability
+  canUnmerge            Boolean                   @default(true)
+  unmergeReason         String?                   @db.Text
+  unmergedAt            DateTime?
+  unmergedBy            String?
+  
+  // Audit trail
+  mergedAt              DateTime                  @default(now())
+  mergedBy              String
+  metadata              Json?
+  
+  // Relations
+  tenant                Tenant                    @relation("MergeLogs", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@index([tenantId, recordType])
+  @@index([tenantId, mergeStatus])
+  @@index([masterRecordId])
+  @@index([duplicateRecordId])
+  @@index([mergedAt])
+  @@index([tenantId, mergedAt(sort: Desc)])
+  @@map("merge_logs")
+}
+
+/// Survivorship Rule - Defines how to handle conflicts during merge
+model SurvivorshipRule {
+  id                    String                    @id @default(cuid())
+  tenantId              String
+  recordType            MergeRecordType           // PARTY, PRODUCT, TAX_CODE
+  ruleName              String                    @db.VarChar(255)
+  description           String?                   @db.Text
+  
+  // Rule definition
+  fieldMappings         Json                      // { "fieldName": "MASTER|DUPLICATE|NEWER|OLDER|CUSTOM" }
+  customLogic           String?                   @db.Text // JavaScript or expression for custom logic
+  priority              Int                       @default(0)
+  
+  // Status
+  isActive              Boolean                   @default(true)
+  
+  // Metadata
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  createdBy             String?
+  updatedBy             String?
+  
+  // Relations
+  tenant                Tenant                    @relation("SurvivorshipRules", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, ruleName])
+  @@index([tenantId, recordType])
+  @@index([tenantId, isActive])
+  @@map("survivorship_rules")
+}
+
+// ============================================================================
+// MDM Enums
+// ============================================================================
+
+enum PartyType {
+  VENDOR
+  CUSTOMER
+  EMPLOYEE
+  PARTNER
+  INTERNAL
+}
+
+enum PartyStatus {
+  ACTIVE
+  INACTIVE
+  MERGED
+  DELETED
+}
+
+enum ProductType {
+  GOOD
+  SERVICE
+  BUNDLE
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DISCONTINUED
+  MERGED
+}
+
+enum TaxType {
+  VAT
+  INCOME_TAX
+  WITHHOLDING_TAX
+  ZAKAT
+  CORPORATE_TAX
+  STAMP_DUTY
+  OTHER
+}
+
+enum TaxCodeStatus {
+  ACTIVE
+  INACTIVE
+  SUPERSEDED
+  MERGED
+}
+
+enum MergeRecordType {
+  PARTY
+  PRODUCT
+  TAX_CODE
+}
+
+enum MergeStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  ROLLED_BACK
+}
+
+enum SurvivorshipStrategy {
+  MANUAL
+  AUTOMATIC
+  RULE_BASED
 }

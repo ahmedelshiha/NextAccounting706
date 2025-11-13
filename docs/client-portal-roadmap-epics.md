@@ -1057,6 +1057,27 @@ Phase 15 ��� Go‑Live & Stabilization ✅ COMPLETE
 - [x] Rollout readiness evaluation
 - [x] Post-launch monitoring
 
+## Enterprise Addendum Roadmap
+**Status: ⚠️ IN PROGRESS**
+
+Epic: MDM-EN Master Data Management
+- ✅ TKT: party/product/taxcode schemas; survivorship rules; dedupe service; merge/unmerge logs.
+- **Implementation Summary**: Fully implemented, documented, and verified. See [MDM Implementation Guide](./MDM_IMPLEMENTATION_GUIDE.md) for details.
+- **Files Modified**: `prisma/schema.prisma`, `src/lib/mdm/mdm-service.ts`, `src/lib/mdm/__tests__/mdm-service.test.ts`, `src/app/api/mdm/*`
+- **Status**: ✅ **COMPLETED**
+
+Epic: BPM-EN Business Process Management
+- ⚠️ TKT: Process definition, task assignment, workflow engine integration.
+- **Status**: ⚠️ **IN PROGRESS** (Next Task)
+
+Epic: RULES-EN Rules Engine
+- ⏸️ TKT: Rule definition language, evaluation engine, decision tables.
+- **Status**: ⏸️ **PAUSED**
+
+Epic: INTEG-EN External Integrations
+- ⏸️ TKT: Salesforce, SAP, Oracle Financials connectors.
+- **Status**: ⏸️ **PAUSED**
+
 ## Milestones & Suggested Order
 - M0: Phase 0
 - M1: Phases 1 + 1.1 + 1.1B
@@ -1064,7 +1085,7 @@ Phase 15 ��� Go‑Live & Stabilization ✅ COMPLETE
 - M3: Phase 3–5
 - M4: Phase 6–8
 - M5: Phase 9–12
-- M6: Phase 13–15 and selected Enterprise epics (MDM, BPM, RULES)
+- M6: Phase 13–15 and selected Enterprise epics (MDM ✅, BPM, RULES)
 
 ## Import tips (Linear/Jira)
 - Use epic key prefixes above; create issue templates for “API”, “UI”, ���Migration”, “Tests”.
